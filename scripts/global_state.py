@@ -100,6 +100,8 @@ cn_preprocessor_modules = {
     "recolor_luminance": recolor_luminance,
     "recolor_intensity": recolor_intensity,
     "blur_gaussian": blur_gaussian,
+    "palette_rectangular": palette_rectangular,
+    "palette_sam": palette_sam,
 }
 
 cn_preprocessor_unloadable = {
@@ -129,7 +131,8 @@ cn_preprocessor_unloadable = {
     "lineart_coarse": unload_lineart_coarse,
     "lineart_anime": unload_lineart_anime,
     "lineart_anime_denoise": unload_lineart_anime_denoise,
-    "inpaint_only+lama": unload_lama_inpaint
+    "inpaint_only+lama": unload_lama_inpaint,
+    "palette_sam": unload_palette_sam,
 }
 
 preprocessor_aliases = {

@@ -620,6 +620,39 @@ def blur_gaussian(img, res=512, thr_a=1.0, **kwargs):
     return result, True
 
 
+model_palette_rectangular = None
+
+
+def palette_rectangular(img, res=512, thr_a=8, **kwargs):
+    img, remove_pad = resize_image_with_pad(img, res)
+    global model_palette_rectangular
+    if model_palette_rectangular is None:
+        from annotator.palette import apply_rectangular_palette
+        model_palette_rectangular = apply_rectangular_palette
+    result = model_palette_rectangular(img, mask_size=thr_a)
+    result = remove_pad(result)
+    return result, True
+
+
+model_palette_sam = None
+
+
+def palette_sam(img, res=512, **kwargs):
+    img, remove_pad = resize_image_with_pad(img, res)
+    global model_palette_sam
+    if model_palette_sam is None:
+        from annotator.palette import SAMImageAnnotator
+        model_palette_sam = SAMImageAnnotator()
+    result = model_palette_sam(img)
+    return remove_pad(result), True
+
+
+def unload_palette_sam():
+    global model_palette_sam
+    if model_palette_sam is not None:
+        model_palette_sam.unload_model()
+
+
 model_free_preprocessors = [
     "reference_only",
     "reference_adain",
@@ -986,6 +1019,29 @@ preprocessor_sliders_config = {
             "step": 0.001
         }
     ],
+    "palette_rectangular": [
+        {
+            "name": flag_preprocessor_resolution,
+            "value": 512,
+            "min": 64,
+            "max": 2048
+        },
+        {
+            "name": "Mask Size",
+            "value": 8,
+            "min": 1,
+            "max": 128,
+            "step": 1
+        }
+    ],
+    "palette_sam": [
+        {
+            "name": flag_preprocessor_resolution,
+            "value": 512,
+            "min": 64,
+            "max": 2048
+        },
+    ],
 }
 
 preprocessor_filters = {
@@ -1008,6 +1064,7 @@ preprocessor_filters = {
     "Revision": "revision_clipvision",
     "T2I-Adapter": "none",
     "IP-Adapter": "ip-adapter_clip_sd15",
+    "Palette": "palette_rectangular",
 }
 
 preprocessor_filters_aliases = {
@@ -1017,5 +1074,5 @@ preprocessor_filters_aliases = {
     't2i-adapter': ['t2i_adapter', 't2iadapter', 't2ia'],
     'ip-adapter': ['ip_adapter', 'ipadapter'],
     'scribble/sketch': ['scribble', 'sketch'],
-    'tile/blur': ['tile', 'blur']
+    'tile/blur': ['tile', 'blur'],
 }  # must use all lower texts

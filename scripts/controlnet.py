@@ -396,7 +396,7 @@ class Script(scripts.Script, metaclass=(
     @staticmethod
     def detectmap_proc(detected_map, module, resize_mode, h, w):
 
-        if 'inpaint' in module:
+        if 'inpaint' in module or 'palette' in module:
             detected_map = detected_map.astype(np.float32)
         else:
             detected_map = HWC3(detected_map)
